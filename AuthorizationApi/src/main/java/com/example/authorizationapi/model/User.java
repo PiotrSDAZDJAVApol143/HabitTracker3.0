@@ -1,0 +1,114 @@
+package com.example.authorizationapi.model;
+
+import jakarta.persistence.*;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
+@Entity
+@Setter
+@Table(name = "APP_USER")
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String uuid;
+
+    @Column(name = "USER_NAME")
+    private String login;
+
+    @Column(name = "Email")
+    private String email;
+
+    @Column(name = "PASSWORD")
+    private String password;
+
+    @Column(name = "ROLE")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Column(name = "IS_LOCK")
+    private boolean isLock;
+    @Column(name = "IS_ENABLE")
+    private boolean isEnabled;
+
+    public User() {
+        generateUuid();
+    }
+
+    public User(long id, String uuid, String login, String email, String password, Role role, boolean isLock, boolean isEnabled) {
+        this.id = id;
+        this.uuid = uuid;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.isLock = isLock;
+        this.isEnabled = isEnabled;
+        generateUuid();
+    }
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public String getUuid(){
+        return this.uuid;
+    }
+
+
+    private long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isLock;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    private void generateUuid() {
+        if (uuid == null || uuid.isEmpty()) {
+            setUuid(UUID.randomUUID().toString());
+        }
+    }
+}
