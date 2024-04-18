@@ -35,7 +35,7 @@ public class EmailService {
             String html = Files.toString(activeTemplate.getFile(), Charsets.UTF_8);
             html = html.replace("https://google.com",fontendUrl+"/aktywuj/"+user.getUuid());
             emailConfiguration.sendMail(user.getEmail(), html,"Aktywacja konta",true);
-        }catch (IOException e){
+        }catch (IOException e){ // jeśli nie będzie istniał
             log.info("Cant send mail");
             throw new RuntimeException(e);
         }

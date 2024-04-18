@@ -45,7 +45,7 @@ public class UserService {
 
 
 
-    private User saveUser(User user) {
+    private User saveUser(User user) { // metoda hashowania hasła
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.saveAndFlush(user);
     }
@@ -197,7 +197,7 @@ public class UserService {
 
 
 
-    public void activateUser(String uid) throws UserDontExistException{
+    public void activateUser(String uid) throws UserDontExistException{ // metoda do zdejmowania Locka nowego Usera
         User user = userRepository.findUserByUuid(uid).orElse(null);
         if (user != null){
             user.setLock(false);
