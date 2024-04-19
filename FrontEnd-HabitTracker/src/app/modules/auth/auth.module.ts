@@ -2,16 +2,14 @@ import { NgModule } from '@angular/core';
 
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './components/login/login.component';
+import { SharedModule } from '../shared/shared.module';
 import { RegisterComponent } from './components/register/register.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import {ReactiveFormsModule} from "@angular/forms";
-import {NgIf} from "@angular/common";
+import { AccountActivationComponent } from './components/account-activation/account-activation.component';
+import { PasswordRecoveryComponent } from './components/password-recovery/password-recovery.component';
+import { PasswordRecoveryFormComponent } from './components/password-recovery-form/password-recovery-form.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
-    imports: [AuthRoutingModule, MatFormFieldModule, MatButtonModule, MatInputModule, ReactiveFormsModule, NgIf],
+  declarations: [LoginComponent, RegisterComponent, AccountActivationComponent, PasswordRecoveryComponent, PasswordRecoveryFormComponent],
+  imports: [SharedModule, AuthRoutingModule],
 })
 export class AuthModule {}
-

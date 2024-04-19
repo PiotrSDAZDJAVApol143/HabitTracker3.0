@@ -1,11 +1,50 @@
-import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {LoginForm, RegisterForm} from '../models/forms.model';
+import { Injectable } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  LoginForm,
+  PasswdRecoveryForm,
+  PasswordsForm,
+  RegisterForm,
+} from '../models/forms.model';
+import { equivalentValidator } from '../../shared/validators/equivalent.validator';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FormService{
+  initPasswdRecoveryForm(): FormGroup<PasswdRecoveryForm> {
+    return new FormGroup({
+      email: new FormControl('', {
+        validators: [Validators.required, Validators.email],
+        nonNullable: true,
+      }),
+    });
+  }
+
+  initPasswordsForm(): FormGroup<PasswordsForm> {
+    return new FormGroup(
+      {
+        password: new FormControl('', {
+          validators: [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(75),
+          ],
+          nonNullable: true,
+        }),
+        repeatedPassword: new FormControl('', {
+          validators: [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(75),
+          ],
+          nonNullable: true,
+        }),
+      },
+      { validators: [equivalentValidator('password', 'repeatedPassword')] }
+    );
+  }
+
   initLoginForm(): FormGroup<LoginForm> {
     return new FormGroup({
       login: new FormControl('', {
