@@ -1,4 +1,4 @@
-<form [formGroup]='loginForm'>
+<form [formGroup]='loginForm' (ngSubmit)='onLogin()'>
   <div class='form-input'>
     <mat-form-field appearance='fill'>
       <mat-label>Login</mat-label>
@@ -16,7 +16,7 @@
   <div class='d-flex justify-content-end'>
     <button mat-raised-button color='primary' [disabled]='loginForm.invalid'>Zaloguj się</button>
   </div>
-  <p class='text-center'>Zapomniałeś hasła? <a routerLink='/odzyskiwanie-haslo'>Odzyskaj hasło</a></p>
+  <p class='text-center'>Zapomniałeś hasła? <a routerLink='/odzyskaj-haslo'>Odzyskaj hasło</a></p>
   <p class='text-center'>Nie masz konta? <a routerLink='/rejestracja'>Zarejestruj się</a></p>
 </form>
 
