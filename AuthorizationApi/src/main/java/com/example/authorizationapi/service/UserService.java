@@ -43,7 +43,10 @@ public class UserService {
     private int refreshExp;
 
 
-
+//private User saveUser(User user) { // metoda hashowania hasła
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        return userRepository.saveAndFlush(user);
+//    }
 
     private User saveUser(User user) { // metoda hashowania hasła
         user.setPassword(passwordEncoder.encode(user.getPassword()));
