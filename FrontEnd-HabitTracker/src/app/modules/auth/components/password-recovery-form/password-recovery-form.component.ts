@@ -34,4 +34,3 @@ export class PasswordRecoveryFormComponent implements OnInit {
     return this.formService.getErrorMessage(control);
   }
 }
-

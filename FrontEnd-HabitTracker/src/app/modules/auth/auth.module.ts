@@ -13,3 +13,4 @@ import { PasswordRecoveryFormComponent } from './components/password-recovery-fo
   imports: [SharedModule, AuthRoutingModule],
 })
 export class AuthModule {}
+

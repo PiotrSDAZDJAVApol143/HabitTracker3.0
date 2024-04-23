@@ -33,6 +33,7 @@ public class EmailConfiguration {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", smtpHost);
         properties.put("mail.smtp.port", smtpPort);
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         this.auth = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -52,9 +53,9 @@ public class EmailConfiguration {
         try{
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject(subject);
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail)); //do kogo wysyłamy
+            message.setSubject(subject);  // nasz topic
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();// do zaawansowanej zawartości niż zwykły tekst np html
             mimeBodyPart.setContent(content, "text/html; charset=utf-8");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);

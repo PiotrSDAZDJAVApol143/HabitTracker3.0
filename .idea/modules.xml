@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AuthorizationApi/AuthorizationApi.iml" filepath="$PROJECT_DIR$/AuthorizationApi/AuthorizationApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/FrontEnd-HabitTracker.iml" filepath="$PROJECT_DIR$/FrontEnd-HabitTracker.iml" />
       <module fileurl="file://$PROJECT_DIR$/GatewayApi/src/main/main.iml" filepath="$PROJECT_DIR$/GatewayApi/src/main/main.iml" />
       <module fileurl="file://$PROJECT_DIR$/GatewayApi/src/test/test.iml" filepath="$PROJECT_DIR$/GatewayApi/src/test/test.iml" />

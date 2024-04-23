@@ -19,11 +19,15 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(body: LoginData): Observable<IUser> {
-    return this.http.post<IUser>(`${this.apiUrl}/login`, body);
+    return this.http.post<IUser>(`${this.apiUrl}/login`, body, {
+      withCredentials: true,  // musi być true ponieważ cookie nie byłyby wysyłane na backend
+    });
   }
 
   logout(): Observable<AuthResponse> {
-    return this.http.get<AuthResponse>(`${this.apiUrl}/logout`);
+    return this.http.get<AuthResponse>(`${this.apiUrl}/logout`, {
+      withCredentials: true,
+    });
   }
 
   register(body: RegisterData): Observable<AuthResponse> {

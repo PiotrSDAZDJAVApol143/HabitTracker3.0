@@ -34,6 +34,7 @@ public class EmailService {
         try{
             String html = Files.toString(activeTemplate.getFile(), Charsets.UTF_8);
             html = html.replace("https://google.com",fontendUrl+"/aktywuj/"+user.getUuid());
+            //html = html.replace("https://poczta.wp.pl",fontendUrl+"/aktywuj/"+user.getUuid());
             emailConfiguration.sendMail(user.getEmail(), html,"Aktywacja konta",true);
         }catch (IOException e){ // jeśli nie będzie istniał
             log.info("Cant send mail");
@@ -47,6 +48,7 @@ public class EmailService {
             log.info("--START sendPasswordRecovery");
             String html = Files.toString(recoveryTemplate.getFile(), Charsets.UTF_8);
             html = html.replace("https://google.com",fontendUrl+"/odzyskaj-haslo/"+uid);
+            //html = html.replace("https://poczta.wp.pl",fontendUrl+"/odzyskaj-haslo/"+uid);
             emailConfiguration.sendMail(user.getEmail(), html,"Odzyskanie hasła",true);
         }catch (IOException e){
             log.info("Cant send mail");

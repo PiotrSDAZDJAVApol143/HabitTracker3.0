@@ -8,10 +8,10 @@ describe('AccountActivationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccountActivationComponent]
+      declarations: [ AccountActivationComponent ]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(AccountActivationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -21,3 +21,4 @@ describe('AccountActivationComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
