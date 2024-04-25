@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {NotifierService} from "angular-notifier";
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from './store/app.reducer';
+import * as AuthActions from '../app/modules/auth/store/auth.actions';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +9,11 @@ import {NotifierService} from "angular-notifier";
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  title = 'Habit-Tracker';
 
-  title = 'FrontEnd-HabitTracker';
-
-  constructor(private notifierService: NotifierService) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.notifierService.notify('Success', 'Operation success!');
+    this.store.dispatch(AuthActions.autoLogin());
   }
 }

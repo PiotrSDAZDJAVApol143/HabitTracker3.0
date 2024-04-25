@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormService } from '../../../core/services/form.service';
 import { PasswordsForm } from '../../../core/models/forms.model';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-password-recovery-form',
@@ -13,24 +15,47 @@ export class PasswordRecoveryFormComponent implements OnInit {
   passwordsForm: FormGroup<PasswordsForm> =
     this.formService.initPasswordsForm();
 
+  uid = '';
+  errorMessage: null | string = null;
+
   get controls(): PasswordsForm {
     return this.passwordsForm.controls;
   }
 
   constructor(
     private formService: FormService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private notifierService: NotifierService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe({
       next: (param) => {
-        console.log(param.get('uid'));
+        this.uid = param.get('uid') as string;
       },
     });
   }
 
   getErrorMessage(control: FormControl<string>): string {
     return this.formService.getErrorMessage(control);
+  }
+
+  onPasswdChange() {
+    const { password } = this.passwordsForm.getRawValue();
+
+    this.authService.changePassword({ password, uid: this.uid }).subscribe({
+      next: () => {
+        this.router.navigate(['/logowanie']);
+        this.notifierService.notify(
+          'success',
+          'Poprawnie zmieniono hasło, możesz się zalogować.'
+        );
+      },
+      error: (err) => {
+        this.errorMessage = err;
+      },
+    });
   }
 }
