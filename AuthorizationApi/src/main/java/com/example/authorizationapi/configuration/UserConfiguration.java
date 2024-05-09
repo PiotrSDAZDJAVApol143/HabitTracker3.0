@@ -29,8 +29,7 @@ public class UserConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http.csrf(AbstractHttpConfigurer::disable)  // nie komentuj
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(autz ->
                         autz
                                 .requestMatchers("/auth/register", "/auth/login",
@@ -38,7 +37,7 @@ public class UserConfiguration {
                                         "/auth/activate", "/auth/logout", "/auth/auto-login",
                                         "/auth/logged-in").permitAll()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }

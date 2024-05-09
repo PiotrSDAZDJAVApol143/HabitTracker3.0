@@ -13,17 +13,17 @@ import java.util.function.Predicate;
 @Component
 public class RouteValidator {
     public Set<Endpoint> openApiEndpoints = new HashSet<>(List.of(
-            new Endpoint("/auth/logout", HttpMethod.GET, Role.GUEST),
-            new Endpoint("/auth/register",HttpMethod.POST,Role.GUEST),
-            new Endpoint("/auth/login",HttpMethod.POST,Role.GUEST),
-            new Endpoint("/auth/validate",HttpMethod.GET,Role.GUEST),
-            new Endpoint("/auth/activate",HttpMethod.GET,Role.GUEST),
-            new Endpoint("/auth/authorize",HttpMethod.GET,Role.GUEST),
-            new Endpoint("/auth/reset-password",HttpMethod.PATCH,Role.GUEST),
-            new Endpoint("/auth/reset-password",HttpMethod.POST,Role.GUEST),
-            new Endpoint("/gateway",HttpMethod.POST,Role.GUEST),
-            new Endpoint("/auto-login",HttpMethod.GET,Role.GUEST),
-            new Endpoint("/logged-in",HttpMethod.GET,Role.GUEST)
+            new Endpoint("/auth/logout", HttpMethod.GET, Role.USER),
+            new Endpoint("/auth/register",HttpMethod.POST,Role.USER),
+            new Endpoint("/auth/login",HttpMethod.POST,Role.USER),
+            new Endpoint("/auth/validate",HttpMethod.GET,Role.USER),
+            new Endpoint("/auth/activate",HttpMethod.GET,Role.USER),
+            new Endpoint("/auth/authorize",HttpMethod.GET,Role.USER),
+            new Endpoint("/auth/reset-password",HttpMethod.PATCH,Role.USER),
+            new Endpoint("/auth/reset-password",HttpMethod.POST,Role.USER),
+            new Endpoint("/gateway",HttpMethod.POST,Role.USER),
+            new Endpoint("/auto-login",HttpMethod.GET,Role.USER),
+            new Endpoint("/logged-in",HttpMethod.GET,Role.USER)
     )
     );
 
@@ -34,7 +34,7 @@ public class RouteValidator {
             if (endpoint.getRole().name().equals(Role.ADMIN.name())) {
                 adminEndpoints.add(endpoint);
             }
-            if (endpoint.getRole().name().equals(Role.GUEST.name())) {
+            if (endpoint.getRole().name().equals(Role.USER.name())) {
                 openApiEndpoints.add(endpoint);
             }
         }

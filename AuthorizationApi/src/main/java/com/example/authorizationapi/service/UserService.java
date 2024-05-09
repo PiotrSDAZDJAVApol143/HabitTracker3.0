@@ -29,6 +29,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ResetOperationService resetOperationService;
@@ -43,21 +44,28 @@ public class UserService {
     private int refreshExp;
 
 
-//private User saveUser(User user) { // metoda hashowania hasła
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userRepository.saveAndFlush(user);
-//    }
-
-    private User saveUser(User user) { // metoda hashowania hasła
+    private User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.saveAndFlush(user);
     }
+
     private String generateToken(String username,int exp) {
         return jwtService.generateToken(username,exp);
     }
 
 
-
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
+        log.info("Delete all cookies");
+        Cookie cookie = cookiService.removeCookie(request.getCookies(),"Authorization");
+        if (cookie != null){
+            response.addCookie(cookie);
+        }
+        cookie = cookiService.removeCookie(request.getCookies(),"refresh");
+        if (cookie != null){
+            response.addCookie(cookie);
+        }
+        return  ResponseEntity.ok(new AuthResponse(Code.SUCCESS));
+    }
 
     public void validateToken(HttpServletRequest request,HttpServletResponse response) throws ExpiredJwtException, IllegalArgumentException{
         String token = null;
@@ -86,9 +94,45 @@ public class UserService {
 
     }
 
+    public ResponseEntity<LoginResponse> loggedIn(HttpServletRequest request, HttpServletResponse response){
+        try{
+            validateToken(request, response);
+            return ResponseEntity.ok(new LoginResponse(true));
+        }catch (ExpiredJwtException|IllegalArgumentException e){
+            return ResponseEntity.ok(new LoginResponse(false));
+        }
+    }
+    public ResponseEntity<?> loginByToken(HttpServletRequest request, HttpServletResponse response){
+        try {
+            validateToken(request, response);
+            String refresh = null;
+            for (Cookie value : Arrays.stream(request.getCookies()).toList()) {
+                if (value.getName().equals("refresh")) {
+                    refresh = value.getValue();
+                }
+            }
+            String login = jwtService.getSubject(refresh);
+            log.info("Login from JWT token: " + login);
+            User user = userRepository.findUserByLoginAndLockAndEnabled(login).orElse(null);
+            if (user != null){
+                return ResponseEntity.ok(
+                        UserRegisterDto
+                                .builder()
+                                .login(user.getUsername())
+                                .email(user.getEmail())
+                                .role(user.getRole())
+                                .build());
+            }
+            log.info("Can't login user don't exist");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(Code.A1));
+        }catch (ExpiredJwtException|IllegalArgumentException e){
+            log.info("Can't login token is expired or null");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(Code.A3));
+        }
+    }
 
 
-    public void register(UserRegisterDto userRegisterDTO) throws UserExistingWithUsername, UserExistingWithEmail {
+    public void register(UserRegisterDto userRegisterDTO) throws UserExistingWithUsername,UserExistingWithEmail{
         userRepository.findUserByLogin(userRegisterDTO.getLogin()).ifPresent(value->{
             log.info("Users alredy exist with this name");
             throw new UserExistingWithUsername("Users alredy exist with this name");
@@ -109,12 +153,12 @@ public class UserService {
         emailService.sendActivation(user);
     }
 
-
-
     public ResponseEntity<?> login(HttpServletResponse response, User authRequest) {
         log.info("--START LoginService");
         User user = userRepository.findUserByLoginAndLockAndEnabled(authRequest.getUsername()).orElse(null);
         if (user != null) {
+            log.info("User password: " + user.getPassword());
+            log.info("Auth request password: " + authRequest.getPassword());
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             if (authenticate.isAuthenticated()) {
                 Cookie refresh = cookiService.generateCookie("refresh", generateToken(authRequest.getUsername(),refreshExp), refreshExp);
@@ -139,6 +183,7 @@ public class UserService {
     }
 
 
+
     public void setAsAdmin(UserRegisterDto user) {
         userRepository.findUserByLogin(user.getLogin()).ifPresent(value->{
             value.setRole(Role.ADMIN);
@@ -146,61 +191,7 @@ public class UserService {
         });
     }
 
-    public ResponseEntity<?> loginByToken(HttpServletRequest request, HttpServletResponse response){
-        try {
-            validateToken(request, response);
-            String refresh = null;
-            for (Cookie value : Arrays.stream(request.getCookies()).toList()) {
-                if (value.getName().equals("refresh")) {
-                    refresh = value.getValue();
-                }
-            }
-            String login = jwtService.getSubject(refresh);
-            User user = userRepository.findUserByLoginAndLockAndEnabled(login).orElse(null);
-            if (user != null){
-                return ResponseEntity.ok(
-                        UserRegisterDto
-                                .builder()
-                                .login(user.getUsername())
-                                .email(user.getEmail())
-                                .role(user.getRole())
-                                .build());
-            }
-            log.info("Can't login user don't exist");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(Code.A1));
-        }catch (ExpiredJwtException|IllegalArgumentException e){
-            log.info("Can't login token is expired or null");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(Code.A3));
-        }
-    }
-
-
-
-    public ResponseEntity<LoginResponse> loggedIn(HttpServletRequest request, HttpServletResponse response){
-        try{
-            validateToken(request, response);  // sprawdzamy czy posiadamy Token
-            return ResponseEntity.ok(new LoginResponse(true));
-        }catch (ExpiredJwtException|IllegalArgumentException e){
-            return ResponseEntity.ok(new LoginResponse(false));
-        }
-    }
-
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
-        log.info("Delete all cookies");
-        Cookie cookie = cookiService.removeCookie(request.getCookies(),"Authorization");
-        if (cookie != null){
-            response.addCookie(cookie);
-        }
-        cookie = cookiService.removeCookie(request.getCookies(),"refresh");
-        if (cookie != null){
-            response.addCookie(cookie);
-        }
-        return  ResponseEntity.ok(new AuthResponse(Code.SUCCESS));
-    }
-
-
-
-    public void activateUser(String uid) throws UserDontExistException{ // metoda do zdejmowania Locka nowego Usera
+    public void activateUser(String uid) throws UserDontExistException{
         User user = userRepository.findUserByUuid(uid).orElse(null);
         if (user != null){
             user.setLock(false);
@@ -220,7 +211,6 @@ public class UserService {
         }
         throw new UserDontExistException("User dont exist");
     }
-
 
     public void restPassword(ChangePasswordData changePasswordData) throws UserDontExistException{
         ResetOperations resetOperations = resetOperationsRepository.findByUid(changePasswordData.getUid()).orElse(null);
@@ -261,5 +251,4 @@ public class UserService {
     }
 
 }
-
 

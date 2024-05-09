@@ -26,4 +26,3 @@ public class RegistrationController {
         return ResponseEntity.ok(new Response("Successfully register new endpoints"));
     }
 }
-

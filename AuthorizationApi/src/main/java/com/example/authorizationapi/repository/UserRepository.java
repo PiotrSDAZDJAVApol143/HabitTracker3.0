@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findUserByLogin(String login);
-    @Query(nativeQuery = true, value = "SELECT * FROM APP_USER where USER_NAME=?1 and IS_LOCK=false and IS_ENABLE=true")
+    @Query(nativeQuery = true, value = "SELECT * FROM APP_USER where login=?1 and IS_LOCK=false and IS_ENABLE=true")
     Optional<User> findUserByLoginAndLockAndEnabled(String login);
-    @Query(nativeQuery = true, value = "SELECT * FROM APP_USER where USER_NAME=?1 and IS_LOCK=false and IS_ENABLE=true and role='ADMIN'")
+    @Query(nativeQuery = true, value = "SELECT * FROM APP_USER where login=?1 and IS_LOCK=false and IS_ENABLE=true and role='ADMIN'")
     Optional<User> findUserByLoginAndLockAndEnabledAndIsAdmin(String login);
     Optional<User> findUserByEmail(String email);
     Optional<User> findUserByUuid(String uuid);

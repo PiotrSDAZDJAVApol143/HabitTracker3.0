@@ -5,12 +5,15 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import java.util.Properties;
 
 @Configuration
+@Slf4j
 public class EmailConfiguration {
+
 
     private final String email;
     private final String password;
@@ -31,9 +34,9 @@ public class EmailConfiguration {
         properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         properties.put("mail.smtp.host", smtpHost);
         properties.put("mail.smtp.port", smtpPort);
-        properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         this.auth = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -53,9 +56,9 @@ public class EmailConfiguration {
         try{
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail)); //do kogo wysyłamy
-            message.setSubject(subject);  // nasz topic
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();// do zaawansowanej zawartości niż zwykły tekst np html
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject(subject);
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(content, "text/html; charset=utf-8");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
@@ -70,3 +73,4 @@ public class EmailConfiguration {
         }
     }
 }
+

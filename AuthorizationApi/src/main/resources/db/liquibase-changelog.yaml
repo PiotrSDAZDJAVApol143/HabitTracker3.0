@@ -1,19 +1,19 @@
 databaseChangeLog:
   - changeSet:
-      id: 02_create_table_appuser
+      id: 10_create_table_appuser
       author: piotr
       changes:
         - sqlFile:
-            path: scripts/02_create_table_appuser.sql
+            path: scripts/10_create_table_appuser.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
   - changeSet:
-      id: 03_create_table_resetoperations
+      id: 11_create_table_resetoperations
       author: piotr
       changes:
         - sqlFile:
-            path: scripts/03_create_table_resetoperations.sql
+            path: scripts/11_create_table_resetoperations.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true

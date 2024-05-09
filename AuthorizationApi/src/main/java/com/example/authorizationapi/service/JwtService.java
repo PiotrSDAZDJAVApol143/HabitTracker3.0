@@ -15,38 +15,33 @@ import java.util.Map;
 
 @Component
 public class JwtService {
-    public final String SECRET;
 
-
-
-    public JwtService(@Value("${jwt.secret}") String secret) {
+    public JwtService(@Value("${jwt.secret}") String secret){
         SECRET = secret;
     }
-
+    public final String SECRET;
 
     public void validateToken(final String token) throws ExpiredJwtException, IllegalArgumentException {
         Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
     }
-
-   private Key getSignKey() {
-       byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-       return Keys.hmacShaKeyFor(keyBytes);
-   }
-
-    public String generateToken(String username, int exp) {
-        Map<String, Object> claimns = new HashMap<>();
-        return createToken(claimns, username, exp);
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
-
-    public String createToken(Map<String, Object> claims, String username, int exp) {
+    public String generateToken(String username,int exp){
+        Map<String, Object> claimns = new HashMap<>();
+        return createToken(claimns,username,exp);
+    }
+    public String createToken(Map<String,Object> claims, String username,int exp){
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + exp))
+                .setExpiration(new Date(System.currentTimeMillis()+exp))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
+
     public String getSubject(final String token){
         return Jwts
                 .parser()
@@ -59,8 +54,6 @@ public class JwtService {
         String username = getSubject(token);
         return generateToken(username,exp);
     }
-
-
 }
 
 

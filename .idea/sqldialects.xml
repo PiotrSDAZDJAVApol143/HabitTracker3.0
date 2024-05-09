@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/02_create_table_appuser.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/03_create_table_resetoperations.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/java/com/example/authorizationapi/repository/UserRepository.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/10_create_table_appuser.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/11_create_table_resetoperations.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/HabitTracker/src/main/resources/db/scripts/01_create_table_goal.sql" dialect="MySQL" />
   </component>
 </project>

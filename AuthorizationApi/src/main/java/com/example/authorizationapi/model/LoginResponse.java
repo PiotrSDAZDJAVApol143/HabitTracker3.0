@@ -16,7 +16,5 @@ public class LoginResponse {
         this.timestamp = String.valueOf(new Timestamp(System.currentTimeMillis()));
         this.message = message;
         this.code = Code.SUCCESS;
-        //metoda która ma udzielić dostęp do danych lub go odrzucić
     }
-
 }

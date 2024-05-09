@@ -2,12 +2,14 @@ package com.example.gatewayapi.service;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class Carousel {
 
     private final EurekaClient eurekaClient;
@@ -16,11 +18,14 @@ public class Carousel {
 
     public Carousel(EurekaClient eurekaClient){
         this.eurekaClient = eurekaClient;
-        initAuthCarousel();
+        try{
+            initAuthCarousel();
+        }catch (NullPointerException e){
+        }
         events();
     }
 
-    public String getUriAuth(){  // Tworzymy adres IP z portem do wykorzystania w RestTemplate.
+    public String getUriAuth(){
         StringBuilder stringBuilder = new StringBuilder();
         InstanceInfo instance = instances.get(currentIndex);
         stringBuilder.append(instance.getIPAddr()).append(":").append(instance.getPort());
@@ -32,16 +37,23 @@ public class Carousel {
         return stringBuilder.toString();
     }
 
-    private void events(){  //dwa EventListenery śledzące czy są dodawane czy usuwane obiekty instancji
+    private void events(){
         eurekaClient.registerEventListener(eurekaEvent -> {
             initAuthCarousel();
         });
         eurekaClient.unregisterEventListener(eurekaEvent -> {
-            initAuthCarousel();
+            try{
+
+                initAuthCarousel();
+            }catch (NullPointerException e){
+
+            }
+
         });
     }
 
-    private void initAuthCarousel() { //pobieramy wszystkie dostępne instancje dla Aplikacji z AuthorizationApi
-        instances = eurekaClient.getApplication("AuthorizationApi").getInstances();
+    private void initAuthCarousel() throws NullPointerException {
+        instances = eurekaClient.getApplication("Authorization-Api").getInstances();
     }
 }
+

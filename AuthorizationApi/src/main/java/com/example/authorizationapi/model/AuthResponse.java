@@ -15,5 +15,5 @@ public class AuthResponse {
       this.message = code.label;
       this.code = code;
    }
-
 }
+
