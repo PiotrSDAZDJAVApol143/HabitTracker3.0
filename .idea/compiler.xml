@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="HabitTracker" />
+        <module name="Habit-Tracker" />
         <module name="RegisterEndpointInformation" />
         <module name="Eureka" />
         <module name="GatewayApi" />
@@ -20,7 +20,7 @@
       <module name="AuthorizationApi" options="-parameters" />
       <module name="Eureka" options="-parameters" />
       <module name="GatewayApi" options="-parameters" />
-      <module name="HabitTracker" options="-parameters" />
+      <module name="Habit-Tracker" options="-parameters" />
       <module name="RegisterEndpointInformation" options="" />
     </option>
   </component>

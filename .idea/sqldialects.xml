@@ -4,6 +4,6 @@
     <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/java/com/example/authorizationapi/repository/UserRepository.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/10_create_table_appuser.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/AuthorizationApi/src/main/resources/db/scripts/11_create_table_resetoperations.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/HabitTracker/src/main/resources/db/scripts/01_create_table_goal.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/Habit-Tracker/src/main/resources/db/scripts/01_create_table_goal.sql" dialect="MySQL" />
   </component>
 </project>
